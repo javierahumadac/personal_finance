@@ -7,6 +7,7 @@ import IncomeItem from './components/IncomeItem';
 import ExpenseSection from './components/ExpenseSection';
 import CreditCardSection from './components/CreditCardSection';
 import SavingsSection from './components/SavingsSection';
+import FinancialSummary from './components/FinancialSummary'; // Importar el nuevo componente
 
 // Importaciones de utilidades
 import { saveToCSV, loadFromCSV, propagateToFutureMonths } from './utils/dataUtils';
@@ -289,6 +290,10 @@ export default function App() {
 				</button>
 			</div>
 
+			{/* Sección de Resumen del Balance - Reemplazada por el nuevo componente */}
+			<FinancialSummary totals={totals} previousBalance={previousBalance} />
+
+
 			{/* Sección de Ingresos */}
 			<div className="section mb-6">
 				<div className="section-header">
@@ -317,37 +322,6 @@ export default function App() {
 							onDelete={() => deleteIncome(index)}
 						/>
 					))}
-				</div>
-			</div>
-
-			{/* Sección de Resumen del Balance */}
-			<div className="section mb-6">
-				<div className="section-header">
-					<h2 className="section-title">Resumen Financiero</h2>
-				</div>
-
-				<div className="summary">
-					<div className="summary-grid">
-						<div className="summary-label">Ingresos Totales:</div>
-						<div className="summary-value income">
-							{totals.totalIncome.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
-						</div>
-
-						<div className="summary-label">Gastos Totales:</div>
-						<div className="summary-value expense">
-							{totals.totalExpenses.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
-						</div>
-
-						<div className="summary-label">Balance Anterior:</div>
-						<div className="summary-value">
-							{parseFloat(previousBalance).toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
-						</div>
-
-						<div className="summary-total-label">Balance Final:</div>
-						<div className={`summary-total-value ${totals.balance >= 0 ? 'positive' : 'negative'}`}>
-							{totals.balance.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
-						</div>
-					</div>
 				</div>
 			</div>
 
