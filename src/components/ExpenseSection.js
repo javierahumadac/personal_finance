@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import ExpenseItem from './ExpenseItem';
+import CurrencyInput from './CurrencyInput';
 
 // Componente de sección de gastos (recurrentes o mensuales)
 const ExpenseSection = ({ title, items, onAdd, onToggle, onEdit, onDelete, showCheckbox = true }) => {
@@ -10,7 +11,9 @@ const ExpenseSection = ({ title, items, onAdd, onToggle, onEdit, onDelete, showC
 
 	const handleAdd = () => {
 		if (newName && newAmount) {
-			onAdd(newName, parseFloat(newAmount));
+			// Convertir el string de monto con formato a número
+			const numericAmount = parseFloat(newAmount.replace(/\./g, '').replace(/\$/g, ''));
+			onAdd(newName, numericAmount);
 			setNewName('');
 			setNewAmount('');
 			setIsAdding(false);
@@ -38,16 +41,12 @@ const ExpenseSection = ({ title, items, onAdd, onToggle, onEdit, onDelete, showC
 							className="form-input"
 						/>
 					</div>
-					<div className="form-field">
-						<label className="form-label">Monto</label>
-						<input
-							type="number"
-							placeholder="Monto"
-							value={newAmount}
-							onChange={(e) => setNewAmount(e.target.value)}
-							className="form-input"
-						/>
-					</div>
+					<CurrencyInput
+						label="Monto"
+						value={newAmount}
+						onChange={setNewAmount}
+						id="expense-amount"
+					/>
 					<div className="form-actions">
 						<button
 							onClick={() => setIsAdding(false)}

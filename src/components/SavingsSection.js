@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PlusCircle, Edit, Trash2, CheckSquare, Square } from 'lucide-react';
+import CurrencyInput from './CurrencyInput';
 
 // Componente de sección de ahorros
 const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPayment }) => {
@@ -19,7 +20,9 @@ const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPay
 
 	const handleAdd = () => {
 		if (newName && newTarget && newMonths) {
-			onAdd(newName, parseFloat(newTarget), parseInt(newMonths));
+			// Convertir el string de monto con formato a número
+			const numericTarget = parseFloat(newTarget.replace(/\./g, '').replace(/\$/g, ''));
+			onAdd(newName, numericTarget, parseInt(newMonths));
 			setNewName('');
 			setNewTarget('');
 			setNewMonths('');
@@ -29,7 +32,9 @@ const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPay
 
 	const handlePartialPayment = (index) => {
 		if (partialAmount) {
-			onPartialPayment(index, parseFloat(partialAmount));
+			// Convertir el string de monto con formato a número
+			const numericPartial = parseFloat(partialAmount.replace(/\./g, '').replace(/\$/g, ''));
+			onPartialPayment(index, numericPartial);
 			setPartialAmount('');
 			setIsAddingPartial(null);
 		}
@@ -37,18 +42,20 @@ const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPay
 
 	const startEditing = (item, index) => {
 		setEditName(item.name);
-		setEditTarget(item.targetAmount);
-		setEditMonths(item.totalMonths);
-		setEditCurrentMonth(item.currentMonth);
+		setEditTarget(item.targetAmount.toString());
+		setEditMonths(item.totalMonths.toString());
+		setEditCurrentMonth(item.currentMonth.toString());
 		setIsEditing(index);
 	};
 
 	const handleUpdate = (index) => {
 		if (editName && editTarget && editMonths) {
-			const monthlyAmount = parseFloat(editTarget) / parseInt(editMonths);
+			// Convertir el string de monto con formato a número
+			const numericTarget = parseFloat(editTarget.replace(/\./g, '').replace(/\$/g, ''));
+			const monthlyAmount = numericTarget / parseInt(editMonths);
 			onEdit(index, {
 				name: editName,
-				targetAmount: parseFloat(editTarget),
+				targetAmount: numericTarget,
 				totalMonths: parseInt(editMonths),
 				currentMonth: parseInt(editCurrentMonth),
 				monthlyAmount: monthlyAmount,
@@ -80,16 +87,13 @@ const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPay
 							className="form-input"
 						/>
 					</div>
-					<div className="form-field">
-						<label className="form-label">Monto objetivo</label>
-						<input
-							type="number"
-							placeholder="Monto objetivo"
-							value={newTarget}
-							onChange={(e) => setNewTarget(e.target.value)}
-							className="form-input"
-						/>
-					</div>
+					<CurrencyInput
+						label="Monto objetivo"
+						value={newTarget}
+						onChange={setNewTarget}
+						placeholder="Monto objetivo"
+						id="savings-target"
+					/>
 					<div className="form-field">
 						<label className="form-label">Meses para completar</label>
 						<input
@@ -131,15 +135,12 @@ const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPay
 										className="form-input"
 									/>
 								</div>
-								<div className="form-field">
-									<label className="form-label">Monto objetivo</label>
-									<input
-										type="number"
-										value={editTarget}
-										onChange={(e) => setEditTarget(e.target.value)}
-										className="form-input"
-									/>
-								</div>
+								<CurrencyInput
+									label="Monto objetivo"
+									value={editTarget}
+									onChange={setEditTarget}
+									id={`edit-savings-target-${index}`}
+								/>
 								<div className="form-field">
 									<label className="form-label">Meses para completar</label>
 									<input
@@ -223,12 +224,11 @@ const SavingsSection = ({ items, onAdd, onToggle, onEdit, onDelete, onPartialPay
 								{isAddingPartial === index ? (
 									<div className="mt-4 pt-2 border-t">
 										<div className="flex items-center space-x-2">
-											<input
-												type="number"
-												placeholder="Monto parcial"
+											<CurrencyInput
 												value={partialAmount}
-												onChange={(e) => setPartialAmount(e.target.value)}
-												className="form-input flex-1"
+												onChange={setPartialAmount}
+												placeholder="Monto parcial"
+												id={`partial-payment-${index}`}
 											/>
 											<button
 												onClick={() => handlePartialPayment(index)}

@@ -10,6 +10,7 @@
 		"lucide-react": "^0.506.0",
 		"personal_finance": "file:",
 		"react": "^19.1.0",
+		"react-currency-input-field": "^3.10.0",
 		"react-dom": "^19.1.0",
 		"react-scripts": "5.0.1",
 		"tailwind": "^4.0.0",

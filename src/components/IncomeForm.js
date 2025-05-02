@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import CurrencyInput from './CurrencyInput';
 
 // Componente de formulario para ingresos
 const IncomeForm = ({ onAdd, onCancel }) => {
@@ -8,7 +9,9 @@ const IncomeForm = ({ onAdd, onCancel }) => {
 
 	const handleSubmit = () => {
 		if (description && amount) {
-			onAdd(description, parseFloat(amount));
+			// Convertir el string de monto con formato a número
+			const numericAmount = parseFloat(amount.replace(/\./g, '').replace(/\$/g, ''));
+			onAdd(description, numericAmount);
 			setDescription('');
 			setAmount('');
 		}
@@ -32,16 +35,13 @@ const IncomeForm = ({ onAdd, onCancel }) => {
 					className="form-input"
 				/>
 			</div>
-			<div className="form-field">
-				<label className="form-label">Monto</label>
-				<input
-					type="number"
-					placeholder="Monto"
-					value={amount}
-					onChange={(e) => setAmount(e.target.value)}
-					className="form-input"
-				/>
-			</div>
+			<CurrencyInput
+				label="Monto"
+				value={amount}
+				onChange={setAmount}
+				placeholder="Monto"
+				id="income-amount"
+			/>
 			<button
 				onClick={handleSubmit}
 				className="btn btn-primary w-full"

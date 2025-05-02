@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Edit, Trash2, CheckSquare, Square } from 'lucide-react';
+import CurrencyInput from './CurrencyInput';
 
 // Componente para mostrar un item de gasto
 const ExpenseItem = ({ item, showCheckbox, onToggle, onEdit, onDelete }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [name, setName] = useState(item.name);
-	const [amount, setAmount] = useState(item.amount);
+	const [amount, setAmount] = useState(item.amount.toString());
 
 	const handleSave = () => {
-		onEdit({ ...item, name, amount: parseFloat(amount) });
+		// Convertir el string de monto con formato a número
+		const numericAmount = parseFloat(amount.replace(/\./g, '').replace(/\$/g, ''));
+		onEdit({ ...item, name, amount: numericAmount });
 		setIsEditing(false);
 	};
 
@@ -24,15 +27,12 @@ const ExpenseItem = ({ item, showCheckbox, onToggle, onEdit, onDelete }) => {
 						className="form-input"
 					/>
 				</div>
-				<div className="form-field">
-					<label className="form-label">Monto</label>
-					<input
-						type="number"
-						value={amount}
-						onChange={(e) => setAmount(e.target.value)}
-						className="form-input"
-					/>
-				</div>
+				<CurrencyInput
+					label="Monto"
+					value={amount}
+					onChange={setAmount}
+					id="edit-expense-amount"
+				/>
 				<div className="form-actions">
 					<button
 						onClick={() => setIsEditing(false)}

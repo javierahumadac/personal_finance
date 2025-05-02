@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PlusCircle, Edit, Trash2, CheckSquare, Square } from 'lucide-react';
+import CurrencyInput from './CurrencyInput';
 
 // Componente de sección de tarjetas de crédito
 const CreditCardSection = ({ items, onAdd, onToggle, onEdit, onDelete }) => {
@@ -17,7 +18,9 @@ const CreditCardSection = ({ items, onAdd, onToggle, onEdit, onDelete }) => {
 
 	const handleAdd = () => {
 		if (newName && newPayment && newInstallments) {
-			onAdd(newName, parseFloat(newPayment), parseInt(newInstallments));
+			// Convertir el string de monto con formato a número
+			const numericPayment = parseFloat(newPayment.replace(/\./g, '').replace(/\$/g, ''));
+			onAdd(newName, numericPayment, parseInt(newInstallments));
 			setNewName('');
 			setNewPayment('');
 			setNewInstallments('');
@@ -27,18 +30,20 @@ const CreditCardSection = ({ items, onAdd, onToggle, onEdit, onDelete }) => {
 
 	const startEditing = (item, index) => {
 		setEditName(item.name);
-		setEditPayment(item.monthlyPayment);
-		setEditInstallments(item.installments);
-		setEditCurrentInstallment(item.currentInstallment);
+		setEditPayment(item.monthlyPayment.toString());
+		setEditInstallments(item.installments.toString());
+		setEditCurrentInstallment(item.currentInstallment.toString());
 		setIsEditing(index);
 	};
 
 	const handleUpdate = (index) => {
 		if (editName && editPayment && editInstallments) {
-			const totalAmount = parseFloat(editPayment) * parseInt(editInstallments);
+			// Convertir el string de monto con formato a número
+			const numericPayment = parseFloat(editPayment.replace(/\./g, '').replace(/\$/g, ''));
+			const totalAmount = numericPayment * parseInt(editInstallments);
 			onEdit(index, {
 				name: editName,
-				monthlyPayment: parseFloat(editPayment),
+				monthlyPayment: numericPayment,
 				installments: parseInt(editInstallments),
 				currentInstallment: parseInt(editCurrentInstallment),
 				totalAmount: totalAmount,
@@ -69,16 +74,13 @@ const CreditCardSection = ({ items, onAdd, onToggle, onEdit, onDelete }) => {
 							className="form-input"
 						/>
 					</div>
-					<div className="form-field">
-						<label className="form-label">Monto cuota</label>
-						<input
-							type="number"
-							placeholder="Monto cuota"
-							value={newPayment}
-							onChange={(e) => setNewPayment(e.target.value)}
-							className="form-input"
-						/>
-					</div>
+					<CurrencyInput
+						label="Monto cuota"
+						value={newPayment}
+						onChange={setNewPayment}
+						placeholder="Monto cuota"
+						id="credit-payment"
+					/>
 					<div className="form-field">
 						<label className="form-label">Número de cuotas</label>
 						<input
@@ -119,15 +121,12 @@ const CreditCardSection = ({ items, onAdd, onToggle, onEdit, onDelete }) => {
 									className="form-input"
 								/>
 							</div>
-							<div className="form-field">
-								<label className="form-label">Monto cuota</label>
-								<input
-									type="number"
-									value={editPayment}
-									onChange={(e) => setEditPayment(e.target.value)}
-									className="form-input"
-								/>
-							</div>
+							<CurrencyInput
+								label="Monto cuota"
+								value={editPayment}
+								onChange={setEditPayment}
+								id={`edit-credit-payment-${index}`}
+							/>
 							<div className="form-field">
 								<label className="form-label">Número de cuotas</label>
 								<input
