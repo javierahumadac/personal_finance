@@ -1,13 +1,328 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--primary-color: #6366f1;
+	--success-color: #10b981;
+	--danger-color: #ef4444;
+	--warning-color: #f59e0b;
+	--background-color: #f3f4f6;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--background-color);
+	color: #1f2937;
+}
+
+/* Contenedor principal */
+.app-container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+/* Encabezado del mes */
+.month-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #8b5cf6;
+	color: white;
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 1.5rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.month-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin: 0;
+}
+
+.month-nav-button {
+	background-color: rgba(255, 255, 255, 0.2);
+	border: none;
+	color: white;
+	height: 36px;
+	width: 36px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.month-nav-button:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Secciones */
+.section {
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	margin-bottom: 1.5rem;
+	overflow: hidden;
+}
+
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin: 0;
+}
+
+.add-button {
+	background-color: var(--primary-color);
+	color: white;
+	border: none;
+	height: 36px;
+	width: 36px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.add-button:hover {
+	background-color: #4f46e5;
+}
+
+/* Items */
+.item {
+	padding: 1rem;
+	border-bottom: 1px solid #e5e7eb;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.item:last-child {
+	border-bottom: none;
+}
+
+.item-info {
+	flex: 1;
+}
+
+.item-name {
+	font-weight: 500;
+	margin-bottom: 0.25rem;
+}
+
+.item-amount {
+	color: #6b7280;
+	font-size: 0.9rem;
+}
+
+.item-actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.action-button {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0.25rem;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}
+
+.action-button:hover {
+	background-color: #f3f4f6;
+}
+
+.edit-button {
+	color: var(--primary-color);
+}
+
+.delete-button {
+	color: var(--danger-color);
+}
+
+.check-button {
+	color: #d1d5db;
+}
+
+.check-button.active {
+	color: var(--primary-color);
+}
+
+/* Formularios */
+.form {
+	padding: 1rem;
+	background-color: #f9fafb;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.form-field {
+	margin-bottom: 1rem;
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	font-size: 0.9rem;
+}
+
+.form-input {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 1rem;
+	transition: border-color 0.2s;
+}
+
+.form-input:focus {
+	outline: none;
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.btn {
+	padding: 0.6rem 1rem;
+	border-radius: 6px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s;
+	border: none;
+}
+
+.btn-primary {
+	background-color: var(--primary-color);
+	color: white;
+}
+
+.btn-primary:hover {
+	background-color: #4f46e5;
+}
+
+.btn-secondary {
+	background-color: #e5e7eb;
+	color: #4b5563;
+}
+
+.btn-secondary:hover {
+	background-color: #d1d5db;
+}
+
+/* Resumen financiero */
+.summary {
+	padding: 1rem;
+}
+
+.summary-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.75rem;
+}
+
+.summary-label {
+	color: #6b7280;
+}
+
+.summary-value {
+	text-align: right;
+	font-weight: 500;
+}
+
+.summary-value.income {
+	color: var(--success-color);
+}
+
+.summary-value.expense {
+	color: var(--danger-color);
+}
+
+.summary-total-label {
+	font-weight: 600;
+	padding-top: 0.5rem;
+	margin-top: 0.5rem;
+	border-top: 1px solid #e5e7eb;
+}
+
+.summary-total-value {
+	text-align: right;
+	font-weight: 700;
+	padding-top: 0.5rem;
+	margin-top: 0.5rem;
+	border-top: 1px solid #e5e7eb;
+}
+
+.summary-total-value.positive {
+	color: var(--success-color);
+}
+
+.summary-total-value.negative {
+	color: var(--danger-color);
+}
+
+/* Tarjeta de crédito y ahorros */
+.progress-info {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.8rem;
+	margin-top: 0.25rem;
+}
+
+.progress-bar {
+	flex: 1;
+	height: 6px;
+	background-color: #e5e7eb;
+	border-radius: 3px;
+	overflow: hidden;
+}
+
+.progress-fill {
+	height: 100%;
+	background-color: var(--primary-color);
+}
+
+.progress-text {
+	color: #6b7280;
+	white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.summary-grid {
+		grid-template-columns: 1fr;
+		gap: 0.5rem;
+	}
+
+	.summary-value {
+		text-align: left;
+	}
+
+	.summary-total-value {
+		text-align: left;
+	}
 }
