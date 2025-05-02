@@ -113,6 +113,7 @@ body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	flex-wrap: wrap;
 }
 
 .item:last-child {
@@ -282,33 +283,6 @@ body {
 
 .summary-total-value.negative {
 	color: var(--danger-color);
-}
-
-/* Tarjeta de crédito y ahorros */
-.progress-info {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	font-size: 0.8rem;
-	margin-top: 0.25rem;
-}
-
-.progress-bar {
-	flex: 1;
-	height: 6px;
-	background-color: #e5e7eb;
-	border-radius: 3px;
-	overflow: hidden;
-}
-
-.progress-fill {
-	height: 100%;
-	background-color: var(--primary-color);
-}
-
-.progress-text {
-	color: #6b7280;
-	white-space: nowrap;
 }
 
 /* Responsive */
