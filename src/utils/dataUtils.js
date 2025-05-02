@@ -14,6 +14,41 @@ export const loadFromCSV = (type, month, year) => {
 	return data ? JSON.parse(data) : null;
 };
 
+// Propagar eliminaciones a meses futuros
+export const propagateDeletionToFutureMonths = (type, currentMonth, currentYear, deletedItemName) => {
+	// Obtener fecha actual
+	const now = new Date();
+	const thisMonth = now.getMonth();
+	const thisYear = now.getFullYear();
+
+	// Para los próximos 12 meses
+	for (let i = 1; i <= 12; i++) {
+		let futureMonth = (currentMonth + i) % 12;
+		let futureYear = currentYear + Math.floor((currentMonth + i) / 12);
+
+		// No propagar más allá de "ahora + 1 año"
+		if (futureYear > thisYear + 1 || (futureYear === thisYear + 1 && futureMonth > thisMonth)) {
+			break;
+		}
+
+		// Cargar datos existentes para este mes futuro
+		let existingData = loadFromCSV(type, futureMonth, futureYear);
+
+		// Si no hay datos para este mes, continuamos al siguiente
+		if (!existingData || !Array.isArray(existingData)) {
+			continue;
+		}
+
+		// Filtrar el elemento eliminado
+		const filteredData = existingData.filter(item => item.name !== deletedItemName);
+
+		// Solo guardar si hubo cambios
+		if (filteredData.length !== existingData.length) {
+			saveToCSV(type, futureMonth, futureYear, filteredData);
+		}
+	}
+};
+
 // Propagar datos recurrentes a meses futuros
 export const propagateToFutureMonths = (type, currentMonth, currentYear, data) => {
 	// Obtener fecha actual
