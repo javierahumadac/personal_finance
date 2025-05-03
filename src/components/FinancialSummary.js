@@ -19,7 +19,7 @@ const FinancialSummary = ({ totals, previousBalance }) => {
 				<h2 className="section-title">Resumen Financiero</h2>
 				<div onClick={() => setShowDetails(!showDetails)}>
 					<div className="flex items-center">
-						<div className={`font-bold text-xl mr-2 ${totals.balance >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+						<div className={`font-bold text-xl mr-2 ${totals.balance >= 0 ? 'text-green-700' : 'text-red-500'}`}>
 							{formatCurrency(totals.balance)}
 						</div>
 						{showDetails ?
@@ -35,7 +35,7 @@ const FinancialSummary = ({ totals, previousBalance }) => {
 					<div className="space-y-3">
 						<div className="flex justify-between items-center py-1">
 							<div className="text-gray-600">Ingresos Totales:</div>
-							<div className="text-emerald-600 font-medium">
+							<div className="text-green-700 font-medium">
 								{formatCurrency(totals.totalIncome)}
 							</div>
 						</div>
@@ -49,7 +49,7 @@ const FinancialSummary = ({ totals, previousBalance }) => {
 
 						<div className="flex justify-between items-center py-1">
 							<div className="text-gray-600">Balance Anterior:</div>
-							<div className="font-medium">
+							<div className="font-medium text-green-700">
 								{formatCurrency(parseFloat(previousBalance))}
 							</div>
 						</div>

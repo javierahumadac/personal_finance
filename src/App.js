@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlusCircle, DiamondPlus } from 'lucide-react';
 
 // Importaciones de componentes
 import IncomeForm from './components/IncomeForm';
@@ -110,7 +110,12 @@ export default function App() {
 
 			{/* Sección de Resumen del Balance */}
 			<FinancialSummary totals={totals} previousBalance={previousBalance} />
-
+			<button
+				onClick={() => { }}
+				className="fixed bottom-4 right-4 z-50 bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-colors"
+			>
+				<DiamondPlus size={20} />
+			</button>
 			{/* Sección de Ingresos */}
 			<div className="section mb-6">
 				<div className="section-header">
