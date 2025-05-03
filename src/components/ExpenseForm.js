@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
 import CurrencyInput from './CurrencyInput';
 
-// Componente de formulario para ingresos
-const IncomeForm = ({ onAdd, onCancel }) => {
-	const [description, setDescription] = useState('');
+// Componente de formulario para gastos
+const ExpenseForm = ({ onSubmit, onCancel }) => {
+	const [name, setName] = useState('');
 	const [amount, setAmount] = useState('');
 
 	const handleSubmit = () => {
-		if (description && amount) {
-			// Convertir el string de monto con formato a número
+		if (name && amount) {
 			const numericAmount = parseFloat(amount.replace(/\./g, '').replace(/\$/g, ''));
-			onAdd(description, numericAmount);
-			setDescription('');
-			setAmount('');
+			onSubmit(name, numericAmount);
 		}
 	};
 
 	return (
 		<div className="form">
 			<div className="form-field">
-				<label className="form-label">Descripción</label>
+				<label className="form-label">Nombre</label>
 				<input
 					type="text"
-					placeholder="Descripción"
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
+					placeholder="Nombre"
+					value={name}
+					onChange={(e) => setName(e.target.value)}
 					className="form-input"
 				/>
 			</div>
@@ -32,10 +29,8 @@ const IncomeForm = ({ onAdd, onCancel }) => {
 				label="Monto"
 				value={amount}
 				onChange={setAmount}
-				placeholder="Monto"
-				id="income-amount"
+				id="expense-amount"
 			/>
-
 			<div className="form-actions">
 				<button
 					onClick={onCancel}
@@ -54,4 +49,4 @@ const IncomeForm = ({ onAdd, onCancel }) => {
 	);
 };
 
-export default IncomeForm;
+export default ExpenseForm;

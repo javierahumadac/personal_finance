@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, PlusCircle, DiamondPlus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, X } from 'lucide-react';
 
 // Importaciones de componentes
 import IncomeForm from './components/IncomeForm';
 import IncomeItem from './components/IncomeItem';
 import ExpenseSection from './components/ExpenseSection';
+import ExpenseForm from './components/ExpenseForm';
 import CreditCardSection from './components/CreditCardSection';
+import CreditCardForm from './components/CreditCardForm';
 import SavingsSection from './components/SavingsSection';
+import SavingsForm from './components/SavingsForm';
 import FinancialSummary from './components/FinancialSummary';
+import RadialMenu from './components/RadialMenu';
+import FloatingModal from './components/FloatingModal';
 
 // Importaciones de hooks personalizados
 import useIncome from './hooks/useIncome';
@@ -24,7 +29,8 @@ export default function App() {
 
 	const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
 	const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
-	const [isAddingIncome, setIsAddingIncome] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [activeForm, setActiveForm] = useState(null);
 
 	// Usar hooks personalizados
 	const {
@@ -93,6 +99,110 @@ export default function App() {
 		});
 	};
 
+	const handleMenuToggle = () => {
+		setIsMenuOpen(!isMenuOpen);
+	};
+
+	const handleSelectOption = (option) => {
+		setActiveForm(option);
+		setIsMenuOpen(false);
+	};
+
+	const handleCloseModal = () => {
+		setActiveForm(null);
+	};
+
+	const renderModalContent = () => {
+		switch (activeForm) {
+			case 'income':
+				return (
+					<IncomeForm
+						onAdd={(description, amount) => {
+							addIncome({ description, amount });
+							handleCloseModal();
+						}}
+						onCancel={handleCloseModal}
+					/>
+				);
+			case 'recurring':
+				return (
+					<ExpenseForm
+						onSubmit={(name, amount) => {
+							addRecurringExpense({ name, amount, paid: false });
+							handleCloseModal();
+						}}
+						onCancel={handleCloseModal}
+					/>
+				);
+			case 'monthly':
+				return (
+					<ExpenseForm
+						onSubmit={(name, amount) => {
+							addMonthlyExpense({ name, amount });
+							handleCloseModal();
+						}}
+						onCancel={handleCloseModal}
+					/>
+				);
+			case 'credit':
+				return (
+					<CreditCardForm
+						onSubmit={(name, monthlyPayment, installments) => {
+							const totalAmount = monthlyPayment * installments;
+							addCreditCard({
+								name,
+								totalAmount,
+								monthlyPayment,
+								installments,
+								currentInstallment: 1,
+								paid: false
+							});
+							handleCloseModal();
+						}}
+						onCancel={handleCloseModal}
+					/>
+				);
+			case 'savings':
+				return (
+					<SavingsForm
+						onSubmit={(name, targetAmount, months) => {
+							const monthlyAmount = targetAmount / months;
+							addSavings({
+								name,
+								targetAmount,
+								totalMonths: months,
+								currentMonth: 1,
+								monthlyAmount,
+								paid: false,
+								partialPayments: []
+							});
+							handleCloseModal();
+						}}
+						onCancel={handleCloseModal}
+					/>
+				);
+			default:
+				return null;
+		}
+	};
+
+	const getModalTitle = () => {
+		switch (activeForm) {
+			case 'income':
+				return 'Nuevo Ingreso';
+			case 'recurring':
+				return 'Nuevo Gasto Recurrente';
+			case 'monthly':
+				return 'Nuevo Gasto Mensual';
+			case 'credit':
+				return 'Nueva Tarjeta de Crédito';
+			case 'savings':
+				return 'Nuevo Ahorro';
+			default:
+				return '';
+		}
+	};
+
 	return (
 		<div className="app-container">
 			{/* Navegación de Meses */}
@@ -110,30 +220,36 @@ export default function App() {
 
 			{/* Sección de Resumen del Balance */}
 			<FinancialSummary totals={totals} previousBalance={previousBalance} />
+
+			{/* Floating Action Button */}
 			<button
-				onClick={() => { }}
+				onClick={handleMenuToggle}
 				className="fixed bottom-4 right-4 z-50 bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-colors"
 			>
-				<DiamondPlus size={20} />
+				{isMenuOpen ? <X size={20} /> : <Plus size={20} />}
 			</button>
+
+			{/* Radial Menu */}
+			<RadialMenu
+				isOpen={isMenuOpen}
+				onSelectOption={handleSelectOption}
+				onClose={() => setIsMenuOpen(false)}
+			/>
+
+			{/* Floating Modal */}
+			<FloatingModal
+				isOpen={!!activeForm}
+				onClose={handleCloseModal}
+				title={getModalTitle()}
+			>
+				{renderModalContent()}
+			</FloatingModal>
+
 			{/* Sección de Ingresos */}
 			<div className="section mb-6">
 				<div className="section-header">
 					<h2 className="section-title">Ingresos</h2>
-					<button onClick={() => setIsAddingIncome(!isAddingIncome)} className="add-button">
-						<PlusCircle size={20} />
-					</button>
 				</div>
-
-				{isAddingIncome && (
-					<IncomeForm
-						onAdd={(description, amount) => {
-							addIncome({ description, amount });
-							setIsAddingIncome(false);
-						}}
-						onCancel={() => setIsAddingIncome(false)}
-					/>
-				)}
 
 				<div>
 					{Array.isArray(income) && income.map((item, index) => (
@@ -151,61 +267,40 @@ export default function App() {
 			<ExpenseSection
 				title="Gastos recurrentes"
 				items={recurringExpenses}
-				onAdd={(name, amount) => addRecurringExpense({ name, amount, paid: false })}
 				onToggle={toggleRecurringExpense}
 				onEdit={editRecurringExpense}
 				onDelete={deleteRecurringExpense}
 				showCheckbox={true}
+				showAddButton={false}
 			/>
 
 			{/* Sección de Gastos Mensuales */}
 			<ExpenseSection
 				title="Gastos mensuales"
 				items={monthlyExpenses}
-				onAdd={(name, amount) => addMonthlyExpense({ name, amount })}
 				onEdit={editMonthlyExpense}
 				onDelete={deleteMonthlyExpense}
 				showCheckbox={false}
+				showAddButton={false}
 			/>
 
 			{/* Sección de Tarjeta de Crédito */}
 			<CreditCardSection
 				items={creditCards}
-				onAdd={(name, monthlyPayment, installments) => {
-					const totalAmount = monthlyPayment * installments;
-					addCreditCard({
-						name,
-						totalAmount,
-						monthlyPayment,
-						installments,
-						currentInstallment: 1,
-						paid: false
-					});
-				}}
 				onToggle={toggleCreditCard}
 				onEdit={editCreditCard}
 				onDelete={deleteCreditCard}
+				showAddButton={false}
 			/>
 
 			{/* Sección de Ahorros */}
 			<SavingsSection
 				items={savings}
-				onAdd={(name, targetAmount, months) => {
-					const monthlyAmount = targetAmount / months;
-					addSavings({
-						name,
-						targetAmount,
-						totalMonths: months,
-						currentMonth: 1,
-						monthlyAmount,
-						paid: false,
-						partialPayments: []
-					});
-				}}
 				onToggle={toggleSavings}
 				onEdit={editSavings}
 				onDelete={deleteSavings}
 				onPartialPayment={addPartialPayment}
+				showAddButton={false}
 			/>
 		</div>
 	);

@@ -300,3 +300,28 @@ body {
 		text-align: left;
 	}
 }
+
+/* Radial Menu */
+@keyframes fadeInScale {
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* Modal Flotante */
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-slideUp {
+	animation: slideUp 0.2s ease-out forwards;
+}

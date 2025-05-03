@@ -1,68 +1,14 @@
 import React, { useState } from 'react';
-import { PlusCircle } from 'lucide-react';
 import ExpenseItem from './ExpenseItem';
-import CurrencyInput from './CurrencyInput';
 
 // Componente de sección de gastos (recurrentes o mensuales)
 const ExpenseSection = ({ title, items, onAdd, onToggle, onEdit, onDelete, showCheckbox = true }) => {
-	const [isAdding, setIsAdding] = useState(false);
-	const [newName, setNewName] = useState('');
-	const [newAmount, setNewAmount] = useState('');
-
-	const handleAdd = () => {
-		if (newName && newAmount) {
-			// Convertir el string de monto con formato a número
-			const numericAmount = parseFloat(newAmount.replace(/\./g, '').replace(/\$/g, ''));
-			onAdd(newName, numericAmount);
-			setNewName('');
-			setNewAmount('');
-			setIsAdding(false);
-		}
-	};
 
 	return (
 		<div className="section mb-6">
 			<div className="section-header">
 				<h2 className="section-title">{title}</h2>
-				<button onClick={() => setIsAdding(!isAdding)} className="add-button">
-					<PlusCircle size={20} />
-				</button>
 			</div>
-
-			{isAdding && (
-				<div className="form">
-					<div className="form-field">
-						<label className="form-label">Nombre</label>
-						<input
-							type="text"
-							placeholder="Nombre"
-							value={newName}
-							onChange={(e) => setNewName(e.target.value)}
-							className="form-input"
-						/>
-					</div>
-					<CurrencyInput
-						label="Monto"
-						value={newAmount}
-						onChange={setNewAmount}
-						id="expense-amount"
-					/>
-					<div className="form-actions">
-						<button
-							onClick={() => setIsAdding(false)}
-							className="btn btn-secondary"
-						>
-							Cancelar
-						</button>
-						<button
-							onClick={handleAdd}
-							className="btn btn-primary"
-						>
-							Agregar
-						</button>
-					</div>
-				</div>
-			)}
 
 			<div>
 				{items.map((item, index) => (
